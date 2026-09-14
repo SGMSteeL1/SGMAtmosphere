@@ -439,15 +439,44 @@ namespace ams::ldr {
         }
     }
 
-    void PreProcessCapability(util::BitPack32 *kac, size_t count) {
-        for (size_t i = 0; i < count; ++i) {
-            const auto cap = kac[i];
-            switch (GetCapabilityId(cap)) {
-                /* NOTE: Currently, there is no pre-processing necessary. */
-                default:
-                    break;
-            }
+void PreProcessCapability(util::BitPack32 *kac, size_t count) {
+    for (size_t i = 0; i < count; ++i) {
+        const auto cap = kac[i];
+
+        switch (GetCapabilityId(cap)) {
+            case CapabilityId::DebugFlags:
+                {
+                    const auto debug_cap =
+                        CapabilityDebugFlags::Decode(cap);
+
+                    u32 total_flags = 0;
+
+                    if (debug_cap.GetAllowDebug()) {
+                        ++total_flags;
+                    }
+
+                    if (debug_cap.GetForceDebugProd()) {
+                        ++total_flags;
+                    }
+
+                    if (debug_cap.GetForceDebug()) {
+                        ++total_flags;
+                    }
+
+                    if (total_flags > 1) {
+                        kac[i] = CapabilityDebugFlags::Encode(
+                            false,
+                            false,
+                            true
+                        );
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
     }
+}
 
 }
