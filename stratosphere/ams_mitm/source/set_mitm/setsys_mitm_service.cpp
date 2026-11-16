@@ -32,7 +32,7 @@ namespace ams::mitm::settings {
         constinit settings::FirmwareVersion g_ams_firmware_version;
 		
         /* Add here your package version */
-        constexpr const char package_version[] = "NEXUS";
+        constexpr const char package_version[] = "SGM";
 
         void CacheFirmwareVersion() {
             if (AMS_LIKELY(g_cached_firmware_version)) {
